@@ -17,34 +17,43 @@ function playRound(playerSelection, computerSelection){
     }
 }
 
-function game(){
-    let pcount = 0;
-    let ccount = 0
-    let playerSelection;
-    for (let i=0; i < 5; i++){
-        let string = prompt("Enter a move (Rock, Paper, Scissors): ").toLowerCase();
-        playerSelection = choices.indexOf(string);
-        result = playRound(playerSelection,getComputerChoice());
-        if (result.includes("win")){
-            pcount++;
+function buttonClicked(e){
+    if (!gameIsRunning){
+        gameIsRunning = true;
+        pscore.textContent = 0;
+        cscore.textContent = 0;
+    }
+    let playerSelection = choices.indexOf(this.id);
+    let computerSelection = getComputerChoice();
+    let round = playRound(playerSelection,computerSelection);
+    let pcount = parseInt(pscore.textContent);
+    let ccount = parseInt(cscore.textContent);
+    result.textContent = round;
+    if (round.includes("win")){
+        pcount ++;
+        pscore.textContent = pcount;
+    }
+    else if (round.includes("lost")){
+        ccount++;
+        cscore.textContent = ccount;
+    }
+    if (pcount == 5 || ccount == 5){
+        gameIsRunning = false;
+        if (pcount > ccount){
+            result.textContent += `\nYou won the game\nMake any selection to reset the game`;
         }
-        else if (result.includes("lost")){
-            ccount++;
+        else if(ccount > pcount){
+            result.textContent += `\nYou lost the game\nMake any selection to reset the game`;
         }
-        console.log(`${result} : ${pcount}-${ccount}`)
-    }
-    if (pcount > ccount){
-        console.log(`You won the game ${pcount}-${ccount}`)
-    }
-    else if(ccount > pcount){
-        console.log(`You lost the game ${pcount}-${ccount}`)
-    }
-    else{
-        console.log(`The game was a tie ${pcount}-${ccount}`)
     }
 }
 
-for (let i=0; i < 10; i++){
-    console.log(getComputerChoice())
+let gameIsRunning = false;
+const pscore = document.querySelector(".player_score .score");
+const cscore = document.querySelector(".computer_score .score");
+const result = document.querySelector(".result");
+const buttons = document.querySelectorAll("button");
+
+for (let button of buttons){
+    button.addEventListener("click", buttonClicked);
 }
-game()
